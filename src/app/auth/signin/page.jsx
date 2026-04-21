@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React from 'react';
 import { Check } from "@gravity-ui/icons";
 import {
   Button,
@@ -10,52 +10,31 @@ import {
   Label,
   TextField,
 } from "@heroui/react";
-import { authClient } from "@/lib/auth-client";
+import { authClient } from '@/lib/auth-client';
+
 
 const page = () => {
-  const onSubmit = async (e) => {
-    e.preventDefault();
 
-    const formData = new FormData(e.currentTarget);
-    const userData = Object.fromEntries(formData.entries())
-    console.log(userData)
+    const onSubmit = async (e) => {
+        e.preventDefault()
 
-    const {data, error} = await authClient.signUp.email({
-        name: userData.name,
-        email: userData.email,
-        password: userData.password,
-        callbackURL: '/'
-    })
-    console.log({data,error})
-    if(error){
-        alert(error.message)
-    }
-    if(data){
-        alert("Successfully")
+        const formData = new FormData(e.currentTarget);
+        const userData = Object.fromEntries(formData.entries())
+        console.log(userData)
+
+        const {data,error} = await authClient.signIn.email({
+            email: userData.name,
+            password: userData.password,
+            rememberMe: true,
+            callbackURL: '/'
+        })
     }
 
-  };
+    return (
+        <div>
+            <h2>Plaese signIn</h2>
+            <Form className="flex w-96 flex-col gap-4" onSubmit={onSubmit}>
 
-  return (
-    <div>
-      <h2>Please sign Up</h2>
-      <Form className="flex w-96 flex-col gap-4" onSubmit={onSubmit}>
-
-        {/* name */}
-        <TextField
-            isRequired
-            name="name"
-            validate={(value) => {
-              if (value.length < 3) {
-                return "Name must be at least 3 characters";
-              }
-              return null;
-            }}
-          >
-            <Label>Name</Label>
-            <Input name="name" placeholder="Your name" />
-            <FieldError />
-          </TextField>
 
         {/* email */}
         <TextField
@@ -108,8 +87,8 @@ const page = () => {
           </Button>
         </div>
       </Form>
-    </div>
-  );
+        </div>
+    );
 };
 
 export default page;
